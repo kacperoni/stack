@@ -2,14 +2,14 @@
 
 final class Stack
 {
+    private const SIZE = 10;
+
     private array $stack;
-    private int $size;
     private int $top;
     private string $output;
 
-    public function __construct(int $size = 10)
+    public function __construct()
     {
-        $this->size = $size;
         $this->stack = [];
         $this->top = 0;
         $this->output = "";
@@ -55,12 +55,12 @@ final class Stack
 
     private function isFull() : bool
     {
-        return $this->size === count($this->stack);
+        return self::SIZE === count($this->stack);
     }
 
     private function getSize() : int
     {
-        return $this->size;
+        return self::SIZE;
     }
 
     public function printStack() : void
