@@ -4,47 +4,45 @@ final class Stack
 {
     private const SIZE = 10;
 
-    private array $stack;
-    private int $top;
-    private string $output;
-
-    public function __construct()
-    {
-        $this->stack = [];
-        $this->top = 0;
-        $this->output = "";
+    /** @param int[] $stack */
+    public function __construct(
+        private array $stack = [],
+        private int $top = 0,
+    ){
     }
 
     public function push(mixed $num) : void
     {
-        if(is_numeric($num) && !strpos($num, '.')){
-            if(!$this->isFull()){
-                $this->stack[]=$num;
-                $this->output="Pushed $num to stack";
-                $this->top++;
-            }else{
-                $this->output="Stack is full!";
-            }
-        }else{
-            $this->output = "Inserted value is not integer type!";
+        if(!is_numeric($num) && strpos($num, '.')){
+            $this->printOutput("Inserted value is not integer type!");
+
+            return;
         }
         
-        $this->printOutput();
+        if($this->isFull()){
+            $this->printOutput("Stack is full!");
+
+            return;
+        }
+
+        $this->stack[] = $num;
+        $this->printOutput(sprintf('Pushed %s to stack', $num));
+        $this->top++;
     }
 
     public function pop() : int
     {
         if($this->isEmpty()){
-            $this->output = "Stack is empty!";
-            $this->printOutput();
+            $this->printOutput("Stack is empty!");
+
             return 0;
         }
 
         $elem = $this->stack[$this->top-1];
         unset($this->stack[$this->top-1]);
         $this->top--;
-        $this->output = "Poped $elem from stack!";
-        $this->printOutput();
+        $this->printOutput(sprintf('Poped %s from stack!', $elem));
+
         return $elem;
     }
 
@@ -66,21 +64,17 @@ final class Stack
     public function printStack() : void
     {   
         if($this->isEmpty()){
-            $this->output = "Stack is empty!";
-        }else{
-            $this->output = "Current stack: ";
-            foreach($this->stack as $elem){
-                $this->output .= $elem." ";
-            }
+            $this->printOutput("Stack is empty!");
+
+            return;
         }
 
-        $this->printOutput();
+        $this->printOutput(sprintf("Current stack: %s", implode(' ', $this->stack)));
     }
 
-    private function printOutput() : void
+    private function printOutput(string $message) : void
     {
-        echo $this->output.PHP_EOL;
-        $this->output = "";
+        echo $message.PHP_EOL.PHP_EOL;
     }
 
     public function run() : void
@@ -102,13 +96,10 @@ final class Stack
                 case 4:
                     exit();
                 default:
-                    $this->output = "Unknown command!";
-                    $this->printOutput();
+                    $this->printOutput("Unknown command!");
             }
         }
     }
 }
 
-$stack = new Stack();
-$stack->run();
-
+(new Stack())->run();
